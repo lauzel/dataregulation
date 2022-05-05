@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+</head>
+<html>
+<body>
+    
+    <div class="container">
+        <form method="POST" action="/">
+            {{ form.csrf_token }}
+            {{ form.query1.label }} {{ form.query1 }} 
+            {{ form.query2.label }} {{ form.query2 }} 
+            {{ form.query3.label }} {{ form.query3 }} 
+            <input type="submit" value="Go">
+        </form>
+    </div>
+</body>
+</html>
+
+<script>
+    var select1 = document.querySelector("#{{ form.query1.id }}")
+    var select2 = document.querySelector("#{{ form.query2.id }}")
+    var select3 = document.querySelector("#{{ form.query3.id }}")
+
+    select1.addEventListener('change', () => {
+        updateSelectField(select2, select1.value, [select3])
+    })
+
+    select2.addEventListener('change', () => {
+        updateSelectField(select3, select2.value, [])
+    })
+
+    async function updateSelectField(fieldToUpdate, value, fieldToEmpty) {
+        response = await fetch("{{ url_for('_get_options') }}")
+        options = await response.json()
+
+        for (f of fieldToEmpty) {
+            [...f.options].forEach(element => {
+                element.remove()
+            });
+        }    
+
+        for (opt of options) {
+            fieldToUpdate.add(new Option(opt[0], opt[1]))
+        }            
+    }
+</script>
