@@ -6,6 +6,13 @@ class DataRegulationRepository:
         self.onto = get_ontology(f'file://{file_path}').load()
 
     def get_all_classes(self):
-        result = self.onto.search(iri="*")
+        classes = self.onto.classes()
 
-        return list(result)
+        return list(classes)
+
+
+    def get_subclass_of(self, subclass):
+         data = self.onto.search(iri=f"*{subclass}*")
+         classes = self.onto.search(subclass_of=data)
+
+         return list(classes)

@@ -7,14 +7,21 @@
 <body>
     
     <div class="container">
-        <form method="POST" action="/">
+        <form method="POST" action="/search">
             {{ form.csrf_token }}
             {{ form.query1.label }} {{ form.query1 }} 
-            {{ form.query2.label }} {{ form.query2 }} 
-            {{ form.query3.label }} {{ form.query3 }} 
+            {{ form.query2.label }} {{ form.query2(disabled=True) }} 
+            {{ form.query3.label }} {{ form.query3(disabled=True) }} 
             <input type="submit" value="Go">
         </form>
+
+        {% for field, errors in form.errors.items() %}
+        <div class="alert alert-error">
+            {{ form[field].label }}: {{ ', '.join(errors) }}
+        </div>
+        {% endfor %}
     </div>
+    
 </body>
 </html>
 
@@ -35,14 +42,20 @@
         response = await fetch("{{ url_for('_get_options') }}")
         options = await response.json()
 
+        // Empty and disable form field
         for (f of fieldToEmpty) {
             [...f.options].forEach(element => {
                 element.remove()
             });
+
+            f.disabled = true
         }    
 
+        // Update needed field with value form json endpoint
         for (opt of options) {
-            fieldToUpdate.add(new Option(opt[0], opt[1]))
-        }            
+            // first elem in array is DisplayName, second is IRI
+            fieldToUpdate.add(new Option(opt[1], opt[0]))
+        }        
+        fieldToUpdate.disabled = false
     }
 </script>
