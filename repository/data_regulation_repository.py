@@ -10,9 +10,14 @@ class DataRegulationRepository:
 
         return list(classes)
 
+    def get_all_properties(self):
+        properties = self.onto.object_properties()
+
+        return list(properties)
 
     def get_subclass_of(self, subclass):
          data = self.onto.search(iri=f"*{subclass}*")
+         print(list(data[0].get_properties()))
          classes = self.onto.search(subclass_of=data)
 
          return list(classes)

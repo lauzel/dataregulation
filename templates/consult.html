@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<br>
+<div class="row align-items-start">
+    <form class="col" method="POST" action="/consult">
+        <select class="form-select" aria-label="Default select example">
+            <option value="">Act</option>
+            <option value="">Security_Measure</option>
+            <option value="">IT_System</option>
+            <option value="">Action</option>
+          </select>
+          <br>
+          <select class="form-select" aria-label="Default select example">
+            <option value="">Has relationship with</option>
+            <option value="">Security_Measure</option>
+            <option value="">IT_System</option>
+            <option value="">Action</option>
+          </select>
+          <br>
+          <select class="form-select" aria-label="Default select example" disabled>
+        
+          </select>
+    </form>
+
+<textarea class="col" name="result" id="" cols="30" rows="10" disabled> 
+    
+
+</textarea>
+</div>
+    
+
+{% endblock %}
