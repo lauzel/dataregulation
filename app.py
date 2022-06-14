@@ -9,7 +9,7 @@ def init_app():
     app.config.update(dict(
         SECRET_KEY="powerful secretkey",
         WTF_CSRF_SECRET_KEY="a csrf secret key",
-        OWL_FILE_PATH="C:/Users/Alexandre/Downloads/DataRegulationOntology.owl"
+        OWL_FILE_PATH="./onto/DataRegulationOntology.owl"
     ))
 
     return app
