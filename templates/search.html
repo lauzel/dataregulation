@@ -4,16 +4,24 @@
 <br>
 
 <h3>
-    Quels sont les  
-    <select name="" id="">
-        <option value="">Action</option>
-        <option value="">Action</option>
+    Selectionner élément de recherche :  
+    <select name="" id="criteria_1">
+        <option value="">Individus</option>
         <option value="">Process</option>
-
+        <option value="">Composant</option>
     </select>
-     qui sont impliqués dans le traitement <br> d'une donnée réglementé par 
-     <select name="" id="">
-        <option value="">EAR Norm</option>
+    <br>
+    Selectionner critère de recherche 
+     <select name="" id="criteria_2">
+        <option value=""> Donnée</option>
+        <option value=""> Règlementation</option>
+     </select>
+     <br>
+     Sélectionner instance de critère
+     <select name="" id="criteria_3">
+        {% for i in instances_criteria %}
+            <option value="">{{ i }}</option>
+        {% endfor %}
      </select>
     
 </h3>
@@ -23,9 +31,9 @@
 <br>
 <div class="row">
     <textarea class="col" name="" id="" cols="30" rows="10" disabled>
-        Transfer EAR Data
-        GrantAccess EAR Data
-        ReceiveAccess EAR Data
+        {% for i in instances_criteria %}
+            {{ i }}
+        {% endfor %}
     </textarea>    
 </div>
 
