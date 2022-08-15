@@ -8,7 +8,7 @@ class ConsultForm(FlaskForm):
     query3 = SelectField('query3', validators=[], validate_choice=False, render_kw={'disabled':''})
     result = TextAreaField('result', validators=[], render_kw={'disabled':''})
 
-    def updateData(self, dataRegulation):
+    def update_data(self, dataRegulation):
         form = self
 
         query1 = form.data["query1"]
@@ -27,3 +27,12 @@ class ConsultForm(FlaskForm):
             form.result.data = dataRegulation.get_relations_properties(query3)
 
     
+    def default_data(self, dataRegulation):
+        classes = dataRegulation.get_all_classes()
+        instances = dataRegulation.get_instances_of_class(classes[0])
+        properties = dataRegulation.get_instance_properties(instances[0])
+        form = self
+
+        form.query1.choices = classes
+        form.query2.choices = instances
+        form.query3.choices = properties

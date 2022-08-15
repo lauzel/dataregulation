@@ -39,14 +39,9 @@ def search_page():
 @app.route('/consult',  methods=['GET', 'POST'])
 def consult_page():
     form = ConsultForm()
-    classes = dataRegulation.get_all_classes()
-    instances = dataRegulation.get_instances_of_class(classes[0])
-    properties = dataRegulation.get_instance_properties(instances[0])
-    form.query1.choices = classes
-    form.query2.choices = instances
-    form.query3.choices = properties
+    form.default_data(dataRegulation)
 
     if form.is_submitted():
-        form.updateData(dataRegulation)
+        form.update_data(dataRegulation)
 
     return render_template('consult.html', form=form)
