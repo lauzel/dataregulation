@@ -38,10 +38,10 @@ def search_page():
 
 @app.route('/consult',  methods=['GET', 'POST'])
 def consult_page():
-    form = ConsultForm()
-    form.default_data(dataRegulation)
+    form = ConsultForm(repo=dataRegulation)
+    form.default_data()
 
     if form.is_submitted():
-        form.update_data(dataRegulation)
+        form.update_data()
 
     return render_template('consult.html', form=form)
