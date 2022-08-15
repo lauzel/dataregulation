@@ -101,3 +101,8 @@ class DataRegulationRepository:
         targetInstance = self.remove_prefix(targetInstance)
         instance = self.onto[targetInstance]
         return list(instance.get_properties())
+
+    def get_relations_properties(self, targetProperties):
+        targetProperties = self.remove_prefix(targetProperties)
+        prop = self.onto[targetProperties]
+        return list(prop.get_relations())    

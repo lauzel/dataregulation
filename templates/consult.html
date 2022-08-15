@@ -1,110 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
-<br>
-<br>
 <div class="row align-items-start">
-    <form class="col" method="POST" action="/consult">
-        <select id="select1" name="select1" class="form-select" aria-label="Default select example">
-            {% for c in classes %}
-            <option value="{{ c }}">{{ c }}</option>
-            {% endfor %}
-          </select>
-          <br>
-          <select id="select2" name="select2" class="form-select" aria-label="Default select example">
-            {% for i in instances %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endfor %}
-          </select>
-          <br>
-          <select id="select3" name="select3" class="form-select" aria-label="Default select example">
-            {% for p in properties %}
-            <option value="{{ p }}">{{ p }}</option>
-            {% endfor %}
-          </select>
+    <form id="formAuto" class="row align-items-start"  method="POST">
+        {{ form.csrf_token }}
+        <div class="col">
+            {{ form.query1(class_="form-select") }} 
+            {{ form.query2(class_="form-select") }} 
+            {{ form.query3(class_="form-select") }} 
+        </div>
+        <div class="col">
+            {{ form.result(class_="col",rows="10",cols="50") }} 
+        </div>
     </form>
-
-<textarea class="col" name="result" id="resultTextArea" cols="30" rows="10" disabled> 
-    {% for r in relations %}
-      {{ r[1] }}
-    {% endfor %}
-
-</textarea>
 </div>
 
+{% for field, errors in form.errors.items() %}
+<div class="alert alert-error">
+    {{ form[field].label }}: {{ ', '.join(errors) }}
+</div>
+{% endfor %}
 
 <script>
-
-  async function updateSelectField(fieldToUpdate, value, fieldToEmpty) {
-      formElement = fieldToUpdate.closest('form')
-      const data = new URLSearchParams(new FormData(formElement));
-
-      console.log(formElement.action)
-      response = await fetch(formElement.action, {
-          method: "post",
-          body: data
-      })
-
-      html = await response.text()
-      const parser = new DOMParser();
-      const htmlDocument = parser.parseFromString(html, "text/html");
-      const formContent = htmlDocument.documentElement.querySelector("form")
-
-      formElement.replaceWith(formContent)
-
-      initEvent()
-     /* // Empty and disable form field
-      for (f of fieldToEmpty) {
-          [...f.options].forEach(element => {
-              element.remove()
-          });
-
-          f.disabled = true
-      }    
-
-      // Update needed field with value form json endpoint
-      for (opt of options) {
-          // first elem in array is DisplayName, second is IRI
-          fieldToUpdate.add(new Option(opt[1], opt[0]))
-      }        
-      fieldToUpdate.disabled = false*/
-  }
-
-  function initEvent() {
-      var select1 = document.querySelector("#select1")
-      var select2 = document.querySelector("#select2")
-      var select3 = document.querySelector("#select3")
-
-      select1.addEventListener('change', () => {
-          updateSelectField(select2, select1.value, [select3])
-      })
-
-      select2.addEventListener('change', () => {
-          updateSelectField(select3, select2.value, [])
-      })
-
-      select3.addEventListener('change', async () => {
-        formElement = select3.closest('form')
-        const data = new URLSearchParams(new FormData(formElement));
-
-        console.log(formElement.action)
-        response = await fetch(formElement.action, {
-            method: "post",
-            body: data
-        })
-        html = await response.text()
-        const parser = new DOMParser();
-        const htmlDocument = parser.parseFromString(html, "text/html");
-        const textAreaNew = htmlDocument.documentElement.querySelector("#resultTextArea")
-
-        textAreaOld = document.querySelector('#resultTextArea')
-        textAreaOld.replaceWith(textAreaNew)
-      })
-  }
-  
-  initEvent()
-
+    formAuto = new FormAutoUpdate("#formAuto")
 </script>
-
-    
 
 {% endblock %}
