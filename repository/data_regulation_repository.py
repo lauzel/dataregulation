@@ -71,7 +71,7 @@ class DataRegulationRepository:
 
         return data[0]
 
-    def get_person_by_data_type(self, dataType):
+    def get_person_by_technological_data(self, dataType):
         dataType = self.remove_prefix(dataType)
 
         data = self.query("""
@@ -83,6 +83,39 @@ class DataRegulationRepository:
             ?itsys dro:performs ?acti.
             ?acti dro:process ?fdp.
             ?fdp dro:hasName "%s"^^xsd:string
+            }
+        """, dataType)
+
+        return data
+
+    def search_request(self, path, dataType):
+        print("path : ", path)
+        print("dataType : ", dataType)
+        dataType = self.remove_prefix(dataType)
+
+        data = self.query("""
+            PREFIX dro: <urn:absolute:DataRegulationOntology#>
+            SELECT
+            DISTINCT ?subject 
+            WHERE { 
+            %s
+            ?lastcrit dro:hasName "%s"^^xsd:string
+            }
+        """, path, dataType)
+
+        return data    
+
+    def get_it_system_by_technological_data(self, dataType):
+        dataType = self.remove_prefix(dataType)
+
+        data = self.query("""
+            PREFIX dro: <urn:absolute:DataRegulationOntology#>
+            SELECT
+            DISTINCT ?subject 
+            WHERE { 
+            ?subject dro:performs ?activite.
+            ?activite dro:process ?dataOne.
+            ?dataOne dro:hasName "%s"^^xsd:string
             }
         """, dataType)
 

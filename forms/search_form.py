@@ -2,7 +2,14 @@ from flask_wtf import FlaskForm
 from wtforms import SelectField, TextAreaField
 from wtforms.validators import DataRequired
 
+PERSON = "Person"
+TECHNOLOGICAL_DATA = "Technological_Data"
+IT_SYSTEM = "IT_System"
+FUNCTIONAL_PROCESS = "Functional_Process"
+ACT= "Act"
+
 class SearchForm(FlaskForm):
+
     def __init__(self, *args, **kwargs):
         self.repo = kwargs.get("repo")
         super(SearchForm, self).__init__(*args, **kwargs)
@@ -19,6 +26,9 @@ class SearchForm(FlaskForm):
         query2 = form.data["query2"]
         query3 = form.data["query3"]
 
+        query1Sf = self.repo.remove_prefix(query1)
+        query2Sf = self.repo.remove_prefix(query2)
+
         if query1 is not None:
             form.query2.choices = [""] + self.repo.get_class_data_regulated()
             form.query2.render_kw={}
@@ -28,12 +38,103 @@ class SearchForm(FlaskForm):
             form.query3.render_kw={}
 
         if query3 is not None:
-            form.result.data = self.repo.get_person_by_data_type(query3)
+            path = """"""
+            if (query1Sf == PERSON and query2Sf == TECHNOLOGICAL_DATA):
+                path = """
+                    ?subject dro:isPersonInvolvedIn ?funcprocess.
+                    ?itsystem dro:isITSystemInvolvedIn ?funcprocess.
+                    ?itsystem dro:performs ?activite.
+                    ?activite dro:process ?lastcrit.
+                """
+    
+
+            if (query1Sf == IT_SYSTEM and query2Sf == TECHNOLOGICAL_DATA):
+                path = """
+                    ?subject dro:performs ?activite.
+                    ?activite dro:process ?lastcrit.
+                """
+
+            if (query1Sf == FUNCTIONAL_PROCESS and query2Sf == TECHNOLOGICAL_DATA):
+                path = """
+                    ?subject dro:involvesITSystem ?itsystem.
+                    ?itsystem dro:performs ?activite.
+                    ?activite dro:process ?lastcrit.
+                """
+
+            if (query1Sf == PERSON and query2Sf == ACT):
+                path1 = """
+                    ?subject dro:isPersonInvolvedIn ?funcprocess.
+                    ?itsystem dro:isITSystemInvolvedIn ?funcprocess.
+                    ?itsystem dro:performs ?activite.
+                    ?activite dro:process ?dataOne.
+                    ?dataOne dro:isBusinessDataGovernedBy ?lastcrit.
+                """
+
+                path2 = """
+                    ?subject dro:isPersonInvolvedIn ?funcprocess.
+                    ?itsystem dro:isITSystemInvolvedIn ?funcprocess.
+                    ?itsystem dro:performs ?activite.
+                    ?activite dro:process ?dataOne.
+                    ?dataOne dro:isPersonalDataGovernedBy ?lastcrit.
+                """
+
+                data1 = self.repo.search_request(path1, query3)
+                data2 = self.repo.search_request(path2, query3)
+
+                form.result.data = data1 + data2
+
+                return
+
+            if (query1Sf == IT_SYSTEM and query2Sf == ACT):
+                path1 = """
+                    ?subject dro:performs ?activite.
+                    ?activite dro:process ?dataOne
+                    ?dataOne dro:isBusinessDataGovernedBy ?lastcrit.
+                """
+
+                path2 = """
+                    ?subject dro:performs ?activite.
+                    ?activite dro:process ?dataOne
+                    ?dataOne dro:isPersonalDataGovernedBy ?lastcrit.
+                """
+
+                data1 = self.repo.search_request(path1, query3)
+                data2 = self.repo.search_request(path2, query3)
+
+                form.result.data = data1 + data2
+
+                return
+
+            if (query1Sf == FUNCTIONAL_PROCESS and query2Sf == ACT):
+                path1 = """
+                    ?subject dro:involvesITSystem ?itsystem.
+                    ?itsystem dro:performs ?activite.
+         	        ?activite dro:process ?dataOne.
+                    ?dataOne dro:isPersonalDataGovernedBy ?lastcrit.
+
+                """
+
+                path2 = """
+                    ?subject dro:involvesITSystem ?itsystem.
+                    ?itsystem dro:performs ?activite.
+                    ?activite dro:process ?dataOne.
+                    ?dataOne dro:isBusinessDataGovernedBy ?lastcrit.
+                """
+
+                data1 = self.repo.search_request(path1, query3)
+                data2 = self.repo.search_request(path2, query3)
+
+                form.result.data = data1 + data2
+
+                return
+
+
+            form.result.data = self.repo.search_request(path, query3)           
 
     
     def default_data(self):
-        classes = self.repo.get_class_regulated()
-        class_data_regulated = self.repo.get_class_data_regulated()
+        classes = [""] + self.repo.get_class_regulated()
+        class_data_regulated = [""] +  self.repo.get_class_data_regulated()
         properties = []
         form = self
 
