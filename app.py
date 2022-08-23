@@ -41,6 +41,11 @@ def search_page():
 def questions_page():
     return render_template('questions.html')    
 
+@app.route('/add', methods=['GET', 'POST'])
+def add_page():
+    return render_template('add.html')    
+
+
 @app.route('/consult',  methods=['GET', 'POST'])
 def consult_page():
     form = ConsultForm(repo=dataRegulation)

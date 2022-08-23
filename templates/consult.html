@@ -3,12 +3,12 @@
 <div class="row align-items-start">
     <form id="formAuto" class="row align-items-start"  method="POST">
         {{ form.csrf_token }}
-        <div class="col">
+        <div class="row">
             {{ form.query1(class_="form-select") }} 
             {{ form.query2(class_="form-select") }} 
             {{ form.query3(class_="form-select") }} 
         </div>
-        <div class="col">
+        <div class="row">
             {{ form.result(class_="col",rows="10",cols="50") }} 
         </div>
     </form>
