@@ -37,6 +37,10 @@ def search_page():
 
     return render_template('search.html', form=form)
 
+@app.route('/questions', methods=['GET', 'POST'])
+def questions_page():
+    return render_template('questions.html')    
+
 @app.route('/consult',  methods=['GET', 'POST'])
 def consult_page():
     form = ConsultForm(repo=dataRegulation)
