@@ -10,6 +10,7 @@ class DataRegulationRepository:
 
     def query(self, query, *params): 
         q = query % (params)
+        print(q)
         return list(default_world.sparql(q))
 
     def get_all_classes(self):
@@ -30,7 +31,20 @@ class DataRegulationRepository:
          return list(classes)
 
     def get_class_by_name(self, name):
-        return     
+        return self.onto.search(iri=name)  
+
+    def get_class_regulated(self):
+        functional = list(self.get_class_by_name('*Functional_Process'))
+        person = [str(self.onto["Person"])]
+        it = list(self.get_class_by_name('*IT_System'))
+
+        return functional + person + it
+
+    def get_class_data_regulated(self):
+        temp = list(self.get_class_by_name('*Technological_Data'))
+        temp2 = [str(self.onto["Act"])]
+
+        return temp + temp2
 
     def get_instance_from_it(self):
         data = self.query("""
@@ -56,6 +70,23 @@ class DataRegulationRepository:
 
 
         return data[0]
+
+    def get_person_by_data_type(self, dataType):
+        dataType = self.remove_prefix(dataType)
+
+        data = self.query("""
+            PREFIX dro: <urn:absolute:DataRegulationOntology#>
+            SELECT
+            DISTINCT ?subject 
+            WHERE { ?subject dro:isPersonInvolvedIn ?funcpro.
+            ?itsys dro:isITSystemInvolvedIn ?funcpro.
+            ?itsys dro:performs ?acti.
+            ?acti dro:process ?fdp.
+            ?fdp dro:hasName "%s"^^xsd:string
+            }
+        """, dataType)
+
+        return data
 
     def get_instance_of_regulation(self):
         
