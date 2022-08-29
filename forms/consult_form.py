@@ -28,7 +28,7 @@ class ConsultForm(FlaskForm):
             form.query3.render_kw={}
 
         if query3 is not None:
-            form.result.data = self.repo.get_relations_properties(query3)
+            form.result.data = self.repo.get_relations_properties(query3, query2)
 
     
     def default_data(self):

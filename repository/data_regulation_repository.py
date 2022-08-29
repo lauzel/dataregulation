@@ -166,7 +166,12 @@ class DataRegulationRepository:
         instance = self.onto[targetInstance]
         return list(instance.get_properties())
 
-    def get_relations_properties(self, targetProperties):
+    def get_relations_properties(self, targetProperties, targetClass):
         targetProperties = self.remove_prefix(targetProperties)
         prop = self.onto[targetProperties]
-        return list(prop.get_relations())    
+        relations = list(prop.get_relations())
+        relations = [i for i in relations if str(i[0]) == str(targetClass) or str(i[1]) == str(targetClass)]
+        
+        return relations    
+        
+
