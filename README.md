@@ -2,7 +2,11 @@
 ## Installation
 ---
 
-Install virtualenv
+### Install Python
+
+https://www.python.org/downloads/windows/
+
+### Virtualenv
 ```
 pip install virtualenv
 ```
@@ -17,13 +21,21 @@ Activate virtualvenv
 ./venv/Scripts/activate
 ```
 
-Install pip dependency 
+### Install pip dependency 
 ```
 pip install -r requirements.txt
 ```
+
+## Run the app
 
 Run flask app
 ```
 $env:FLASK_ENV = "development"
 python -m flask run
+```
+
+or 
+
+```
+./run.bash
 ```
